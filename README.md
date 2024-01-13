@@ -16,7 +16,7 @@ Minecraft Server Tracker is a Minecraft client mod that tracks the player's serv
 3. Notifications will be sent to the configured Discord webhook.
 
 # Download (Release)
-1. Download the latest .jar file
+1. Download the latest `.jar` file
 2. Drag it into your mod's folder
 
 # Download (Build)
