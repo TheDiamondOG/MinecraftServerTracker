@@ -19,10 +19,10 @@ Minecraft Server Tracker is a Minecraft client mod that tracks the player's serv
 
 1. Clone the repository:
 `git clone https://github.com/TheDiamondOG/MinecraftServerTracker.git`
-2. Add your webhook url to the code (This is the step until I can find out how config files work)
+2. Add your webhook url to the code (This is the step until I can find out how config files work).
 src/client/java/io/github/thediamondog/DiscordNotifier.java line 11
 3. Build the mod:
 `./gradlew build`
-4. Drag the mod into your mods folder
+4. Drag the mod into your mods folder.
 The mod will be found in `build/libs/servertracker-1.0.3.jar`
 5. Join a server without the risk of getting banned.
