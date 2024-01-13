@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "servertracker",
+	"version": "${version}",
+	"name": "ServerTracker",
+	"description": "This is a mod that tracks what server you go to and sends it to a discord webhook",
+	"authors": [
+		"TheDiamondOG"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/servertracker/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.thediamondog.ServerTracker"
+		],
+		"client": [
+			"io.github.thediamondog.ServerTrackerClient"
+		]
+	},
+	"mixins": [
+		"servertracker.mixins.json",
+		{
+			"config": "servertracker.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
