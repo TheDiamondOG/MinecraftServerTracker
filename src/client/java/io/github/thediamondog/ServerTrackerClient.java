@@ -5,61 +5,106 @@ import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.ClientConnection;
 
-public class ServerTrackerClient implements ClientModInitializer {
-	// Logs the last joined server so your pc does not explode and so you don't get banned
-	private String lastServerAddress = "";
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
-	// Same purpose of the last one
+public class ServerTrackerClient implements ClientModInitializer {
+	private String lastServerAddress = "";
 	private boolean sentStartupMessage = false;
 
-	// Runs at the start of the client stuff
+	public static String webhookUrl;
+	public static int embedColorDecimal;
+
 	@Override
 	public void onInitializeClient() {
-		// Register a client tick callback to check the server information
+		loadConfig();
+
 		ClientTickCallback.EVENT.register(client -> {
 			if (!sentStartupMessage) {
 				String playerName = MinecraftClient.getInstance().getSession().getUsername();
-				// Send startup message when Minecraft starts
 				DiscordNotifier.sendStatus(playerName, "Online");
 				sentStartupMessage = true;
 			}
-
-			// Define the connection
 
 			ClientConnection connection = MinecraftClient.getInstance().getNetworkHandler() != null
 					? MinecraftClient.getInstance().getNetworkHandler().getConnection()
 					: null;
 
-			// Checks if someone is in the server
 			if (connection != null) {
-				// Access server information
 				String fullServerAddress = connection.getAddress().toString();
 				String serverURL = parseServerURL(fullServerAddress);
 				String playerName = MinecraftClient.getInstance().getSession().getUsername();
-				// Spam protection
+
 				if (!serverURL.equals(lastServerAddress)) {
-					// What gets sent
-					// Check if the server URL is different from the last one
 					System.out.println("Joined server: " + serverURL);
 
-					// Send server information to webhook with JSON embed
-					if (serverURL.startsWith("local")) { // Adding this check made it look better
+					if (serverURL.startsWith("local")) {
 						DiscordNotifier.sendStatus(playerName, "Playing Singleplayer");
 					} else {
-						DiscordNotifier.sendServerAddress(playerName, serverURL); // Normal server sending
+						DiscordNotifier.sendServerAddress(playerName, serverURL);
 					}
 
-					// Update the last server address
 					lastServerAddress = serverURL;
 				}
 			}
 		});
 	}
 
-	// Makes it look good
-	// But also makes it not look like an ip address
+	private void loadConfig() {
+		try {
+			File configFile = new File("config.properties");
+
+			if (!configFile.exists()) {
+				configFile.createNewFile();
+				setDefaultConfig(configFile);
+			}
+
+			Properties prop = new Properties();
+			FileInputStream input = new FileInputStream(configFile);
+			prop.load(input);
+
+			webhookUrl = prop.getProperty("webhookUrl", "");
+			embedColorDecimal = Integer.parseInt(prop.getProperty("embedColorDecimal", "7722093"));
+			input.close();
+
+			saveConfig(configFile);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void setDefaultConfig(File configFile) {
+		Properties prop = new Properties();
+		prop.setProperty("webhookUrl", "");
+		prop.setProperty("embedColorDecimal", "7722093");
+
+		try {
+			FileOutputStream output = new FileOutputStream(configFile);
+			prop.store(output, "Minecraft Server Tracker Config");
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void saveConfig(File configFile) {
+		try {
+			Properties prop = new Properties();
+			prop.setProperty("webhookUrl", webhookUrl);
+			prop.setProperty("embedColorDecimal", Integer.toString(embedColorDecimal));
+
+			FileOutputStream output = new FileOutputStream(configFile);
+			prop.store(output, "Minecraft Server Tracker Config");
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private String parseServerURL(String fullServerAddress) {
-		// Remove everything after the '/'
 		return fullServerAddress.split("/")[0];
 	}
 }

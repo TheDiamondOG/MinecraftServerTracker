@@ -5,11 +5,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import io.github.thediamondog.ServerTrackerClient;
 
 public class DiscordNotifier {
-    // Insert webhook url here
-    static String WEBHOOK_URL = "";
-
     // This will send the server url
     public static void sendServerAddress(String playerName, String serverAddress) {
         try {
@@ -51,7 +49,7 @@ public class DiscordNotifier {
                 + "\"embeds\": ["
                 + "{"
                 + "\"title\": \"" + playerName + " Status Update\","
-                + "\"color\": 7722093,"
+                + "\"color\": \"" + ServerTrackerClient.embedColorDecimal + "\","
                 + "\"description\": \"" + status + "\""
                 + "}"
                 + "]"
@@ -61,7 +59,7 @@ public class DiscordNotifier {
     // Everything gets sent here
     public static void sendRequest(String content) throws Exception {
         HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(WEBHOOK_URL);
+        HttpPost httpPost = new HttpPost(ServerTrackerClient.webhookUrl);
 
         // Set headers
         httpPost.setHeader("Content-Type", "application/json");
