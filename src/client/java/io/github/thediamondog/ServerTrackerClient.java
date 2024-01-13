@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ServerTrackerClient implements ClientModInitializer {
+	// Love Varibles
 	private String lastServerAddress = "";
 	private boolean sentStartupMessage = false;
 
@@ -53,9 +54,10 @@ public class ServerTrackerClient implements ClientModInitializer {
 		});
 	}
 
+	// Load the config file
 	private void loadConfig() {
 		try {
-			File configFile = new File("config.properties");
+			File configFile = new File("tracker.properties");
 
 			if (!configFile.exists()) {
 				configFile.createNewFile();
@@ -76,8 +78,10 @@ public class ServerTrackerClient implements ClientModInitializer {
 		}
 	}
 
+	// -\_("")_/-
 	private void setDefaultConfig(File configFile) {
 		Properties prop = new Properties();
+
 		prop.setProperty("webhookUrl", "");
 		prop.setProperty("embedColorDecimal", "7722093");
 
@@ -90,6 +94,7 @@ public class ServerTrackerClient implements ClientModInitializer {
 		}
 	}
 
+	// Saves the config File
 	private void saveConfig(File configFile) {
 		try {
 			Properties prop = new Properties();
