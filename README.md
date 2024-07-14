@@ -2,7 +2,8 @@
 
 ## Overview
 
-Minecraft Server Tracker is a Minecraft client mod that tracks the player's server connections and sends it to a Discord webhooks.
+Minecraft Server Tracker is a Minecraft client mod that tracks the player's server connections and sends it to a Discord webhooks.\
+Only for 1.20.4
 
 ## Features
 
